@@ -1,9 +1,12 @@
-<?php 
+<?php
 
-use Timon\PhpFramework\Http\Request;
+use Timon\PhpFramework\Http\Kernel\Kernel;
+use Timon\PhpFramework\Http\Request\Request;
 
-require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-$request = Request::createFromGlobals();
+define('APP_PATH', dirname(__DIR__));
+require_once dirname(__DIR__).'/vendor/autoload.php';
 
-dd($request);
+$kernel = new Kernel();
+
+return $kernel->handle(Request::createFromGlobals());
