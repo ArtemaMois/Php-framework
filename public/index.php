@@ -1,12 +1,16 @@
 <?php
 
 use Timon\PhpFramework\Http\Kernel\Kernel;
-use Timon\PhpFramework\Http\Request\Request;
-
 
 define('APP_PATH', dirname(__DIR__));
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
-$kernel = new Kernel();
+/**
+ * @var League\Container\Container\Container @container
+ */
+$container = require APP_PATH.'/config/services.php';
+$kernel = $container->get(Kernel::class);
 
-return $kernel->handle(Request::createFromGlobals());
+$response = $kernel->handle();
+
+$response->send();

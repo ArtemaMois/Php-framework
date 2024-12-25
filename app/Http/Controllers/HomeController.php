@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers;
 
@@ -8,6 +8,11 @@ class HomeController
 {
     public function index()
     {
-        return new Response("<h1>HomeController Content</h1>");
+        return (new Response('<h1>HomeController Content</h1>'))->send();
+    }
+
+    public function posts(int $id)
+    {
+        return response()->json(['data' => $id]);
     }
 }
