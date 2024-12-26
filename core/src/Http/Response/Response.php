@@ -5,7 +5,7 @@ namespace Timon\PhpFramework\Http\Response;
 class Response
 {
     public function __construct(
-        private $data = null,
+        private string $data = '',
         private array $headers = [],
         private int $statusCode = 200,
     ) {
@@ -15,6 +15,12 @@ class Response
     public function send()
     {
         echo $this->data;
+    }
+
+    public function setContent(string $content)
+    {
+        $this->data = $content;
+        return $this;
     }
 
     public function json(array $data)

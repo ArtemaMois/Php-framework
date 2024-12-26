@@ -28,7 +28,6 @@ class Kernel
     public function handle()
     {
         try {
-            throw new Exception("sss");
             [$routeHandler, $params] = $this->router->dispatch($this->request, $this->container,);
             $response = call_user_func_array($routeHandler, $params);
         } catch (Exception $e)

@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Timon\PhpFramework\Http\Controller\AbstractController;
 use Timon\PhpFramework\Http\Response\Response;
+use Twig\Environment;
 
-class HomeController
+class HomeController extends AbstractController
 {
+
     public function index()
     {
-        return (new Response('<h1>HomeController Content</h1>'))->send();
+        $response = $this->render('home.html.twig', ['twig' => '123']);
+        return $response;
     }
 
     public function posts(int $id)
