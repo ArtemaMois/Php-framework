@@ -1,13 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Some twig</title>
-</head>
-<body>
+{% extends 'default.html.twig' %}
 
-Beautiful title
-<h1>{{ twig }}</h1>
-</body>
-</html>
+{% block main %}
+
+<main class="container">
+  <div class="bg-body-tertiary p-5 rounded">
+    <h1>Navbar for PHP Framework</h1>
+    <a class="btn btn-lg btn-danger" href="{{ youTubeChannel }}" target="_blank" role="button">Перейти на YouTube &raquo;</a>
+  </div>
+</main>
+
+{% endblock %}
+

@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\YoutubeService;
 use Timon\PhpFramework\Http\Controller\AbstractController;
-use Timon\PhpFramework\Http\Response\Response;
-use Twig\Environment;
 
 class HomeController extends AbstractController
 {
+    public function __construct(
+        private YoutubeService $youtube
+    ) {}
 
     public function index()
     {
-        $response = $this->render('home.html.twig', ['twig' => '123']);
+        exit();
+        $response = $this->render('home.html.twig', ['youTubeChannel' => $this->youtube->getChannelUrl()]);
+
         return $response;
     }
 

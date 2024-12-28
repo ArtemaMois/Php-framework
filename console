@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+
+<?php
+
+use Timon\PhpFramework\Console\Kernel;
+
+define('APP_PATH', dirname(__FILE__));
+
+require_once dirname(__FILE__).'/vendor/autoload.php';
+
+$container = require APP_PATH . "/config/services.php";
+
+$kernel = $container->get(Kernel::class);
+
+$status = $kernel->handle();
+
+exit($status);

@@ -20,6 +20,7 @@ class Response
     public function setContent(string $content)
     {
         $this->data = $content;
+
         return $this;
     }
 
