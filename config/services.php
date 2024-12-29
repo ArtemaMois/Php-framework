@@ -14,6 +14,7 @@ use Timon\PhpFramework\Console\Kernel as ConsoleKernel;
 use Timon\PhpFramework\Dbal\ConnectionFactory;
 use Timon\PhpFramework\Http\Controller\AbstractController;
 use Timon\PhpFramework\Http\Kernel\Kernel;
+use Timon\PhpFramework\Http\Request\Request;
 use Timon\PhpFramework\Routing\Router\Router;
 use Timon\PhpFramework\Routing\Router\RouterInterface;
 use Twig\Environment;
@@ -63,4 +64,5 @@ $container->addShared('twig-loader', FilesystemLoader::class)->addArgument(new S
 $container->addShared('twig', Environment::class)->addArgument('twig-loader');
 $container->inflector(AbstractController::class)->invokeMethod('setContainer', [$container]);
 
+// настройка Request
 return $container;

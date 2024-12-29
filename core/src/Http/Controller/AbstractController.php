@@ -3,6 +3,7 @@
 namespace Timon\PhpFramework\Http\Controller;
 
 use Psr\Container\ContainerInterface;
+use Timon\PhpFramework\Http\Request\Request;
 use Timon\PhpFramework\Http\Response\Response;
 use Twig\Environment;
 
@@ -11,6 +12,7 @@ abstract class AbstractController
     protected ?Environment $twig = null;
 
     protected ?ContainerInterface $container = null;
+    protected ?Request $request = null;
 
     public function setContainer(ContainerInterface $container)
     {
@@ -23,6 +25,10 @@ abstract class AbstractController
         $this->twig = $twig;
     }
 
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
+    }
     public function render(string $view, array $params = [], ?Response $response = null): Response
     {
         $content = $this->twig->render($view, $params);

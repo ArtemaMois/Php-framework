@@ -26,4 +26,24 @@ class Request
     {
         return $this->server['REQUEST_METHOD'];
     }
+
+    public function postParams()
+    {
+        return $this->postData;
+    }
+
+    public function postParam(string $key, $default = null)
+    {
+        return isset($this->postData[$key]) ? $this->postData[$key] : $default;
+    }
+
+    public function getParams()
+    {
+        return $this->getParams;
+    }
+
+    public function getParam(string $key, $default = null)
+    {
+        return isset($this->getParams[$key]) ? $this->getParams[$key] : $default;
+    }
 }

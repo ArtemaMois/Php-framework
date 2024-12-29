@@ -27,16 +27,6 @@ class Kernel
     public function handle()
     {
         try {
-            /** @var Connection connection */
-            $connection = $this->container->get(Connection::class);
-            dd($connection->executeQuery('CREATE TABLE Staff 
-(
-    id INT,
-    name VARCHAR(255) NOT NULL,
-    position VARCHAR(30),
-    birthday Date
-);
-'));
             [$routeHandler, $params] = $this->router->dispatch($this->request, $this->container);
             $response = call_user_func_array($routeHandler, $params);
         } catch (Exception $e) {

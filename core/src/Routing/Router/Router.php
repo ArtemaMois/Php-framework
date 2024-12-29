@@ -2,9 +2,11 @@
 
 namespace Timon\PhpFramework\Routing\Router;
 
+use App\Http\Controllers\PostsController;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use League\Container\Container;
+use Timon\PhpFramework\Http\Controller\AbstractController;
 use Timon\PhpFramework\Http\Exceptions\MethodNotAllowedException;
 use Timon\PhpFramework\Http\Exceptions\PageNotFoundException;
 use Timon\PhpFramework\Http\Request\Request;
@@ -40,7 +42,9 @@ class Router implements RouterInterface
             $controller = $container->get($controllerId);
             $handler = [$controller, $action];
         }
-
+        if(is_subclass_of($controller, AbstractController::class)){
+            $controller->setRequest($request);
+        }
         return [$handler, $params];
     }
 
