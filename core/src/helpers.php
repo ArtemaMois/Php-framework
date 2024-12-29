@@ -8,3 +8,5 @@ if (! function_exists('response')) {
         return new Response($content, $headers, $status);
     }
 }
+
+

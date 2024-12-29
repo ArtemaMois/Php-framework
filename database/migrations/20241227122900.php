@@ -14,7 +14,7 @@ return new class
             'unsigned' => true,
         ]);
         $table->addColumn('title', Types::STRING)->setLength(255);
-        $table->addColumn('body', Types::TEXT)->setLength(255);
+        $table->addColumn('body', Types::TEXT)->setLength(1255);
         $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, [
             'default' => 'CURRENT_TIMESTAMP',
         ]);
