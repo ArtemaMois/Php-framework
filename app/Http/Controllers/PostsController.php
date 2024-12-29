@@ -6,6 +6,7 @@ use App\Entities\Post;
 use App\Services\PostService;
 use Timon\PhpFramework\Http\Controller\AbstractController;
 use Timon\PhpFramework\Http\Request\Request;
+use Timon\PhpFramework\Http\Response\RedirectResponse;
 
 class PostsController extends AbstractController
 {
@@ -29,7 +30,7 @@ class PostsController extends AbstractController
     {
         $post = Post::create($this->request->postParam('title'), $this->request->postParam('body'));
         $post = $this->service->save($post);
-        dd($post);
+        return new RedirectResponse("/posts/" . $post->id());
     }
 
 }

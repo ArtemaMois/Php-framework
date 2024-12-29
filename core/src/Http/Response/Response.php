@@ -26,6 +26,16 @@ class Response
 
     public function json(array $data)
     {
-        dd(json_encode($data));
+        return json_encode($data);
+    }
+
+    public function getHeader(string $key)
+    {
+        return $this->headers[$key];  
+    }
+
+    public function getStatusCode(): int
+    {
+        return $this->statusCode;
     }
 }
