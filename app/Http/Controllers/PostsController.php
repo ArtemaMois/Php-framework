@@ -13,7 +13,6 @@ class PostsController extends AbstractController
 {
     public function __construct(
        private PostService $service,
-       private SessionInterface $session
     ) {}
     public function index() {}
 
@@ -30,9 +29,9 @@ class PostsController extends AbstractController
 
     public function store()
     {
-        $post = Post::create($this->request->postParam('title'), $this->request->postParam('body'));
+        $post = Post::create($this->request->input('title'), $this->request->input('body'));
         $post = $this->service->save($post);
-        $this->session->setFlash('success', 'Пост успешно создан');
+        $this->request->getSession()->setFlash('success', 'Пост успешно создан');
         return new RedirectResponse("/posts/" . $post->id());
     }
 

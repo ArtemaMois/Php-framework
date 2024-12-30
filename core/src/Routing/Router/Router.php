@@ -6,6 +6,7 @@ use App\Http\Controllers\PostsController;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use League\Container\Container;
+use Psr\Container\ContainerInterface;
 use Timon\PhpFramework\Http\Controller\AbstractController;
 use Timon\PhpFramework\Http\Exceptions\MethodNotAllowedException;
 use Timon\PhpFramework\Http\Exceptions\PageNotFoundException;
@@ -33,7 +34,7 @@ class Router implements RouterInterface
         // dd($this->routes);
     }
 
-    public function dispatch(Request $request, Container $container)
+    public function dispatch(Request $request, ContainerInterface $container)
     {
         $routeInfo = $this->dispatcher->dispatch($request->method(), $request->uri());
         [$handler, $params] = $this->defineRouteInfo($routeInfo);

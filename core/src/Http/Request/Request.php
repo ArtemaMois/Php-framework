@@ -2,8 +2,11 @@
 
 namespace Timon\PhpFramework\Http\Request;
 
+use Timon\PhpFramework\Session\SessionInterface;
+
 class Request
 {
+    private SessionInterface $session;
     public function __construct(
         private readonly array $getParams,
         private readonly array $postData,
@@ -32,7 +35,7 @@ class Request
         return $this->postData;
     }
 
-    public function postParam(string $key, $default = null)
+    public function input(string $key, $default = null)
     {
         return isset($this->postData[$key]) ? $this->postData[$key] : $default;
     }
@@ -45,5 +48,16 @@ class Request
     public function getParam(string $key, $default = null)
     {
         return isset($this->getParams[$key]) ? $this->getParams[$key] : $default;
+    }
+
+
+    public function getSession(): SessionInterface
+    {
+        return $this->session;
+    }
+
+    public function setSession(SessionInterface $session): void
+    {
+        $this->session = $session;
     }
 }

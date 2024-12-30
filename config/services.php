@@ -17,14 +17,12 @@ use Timon\PhpFramework\Http\Controller\AbstractController;
 use Timon\PhpFramework\Http\Kernel\Kernel;
 use Timon\PhpFramework\Http\Middleware\RequestHandler;
 use Timon\PhpFramework\Http\Middleware\RequestHandlerInterface;
-use Timon\PhpFramework\Http\Request\Request;
+use Timon\PhpFramework\Http\Middleware\RouterDispatch;
 use Timon\PhpFramework\Routing\Router\Router;
 use Timon\PhpFramework\Routing\Router\RouterInterface;
 use Timon\PhpFramework\Session\Session;
 use Timon\PhpFramework\Session\SessionInterface;
 use Timon\PhpFramework\Template\TwigFactory;
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
 
 $routes = include APP_PATH . '/routes/web.php';
 $container = new Container;
@@ -71,7 +69,10 @@ $container->add(Kernel::class)
 ]);
 
 // настройка RequestHandler
-$container->add(RequestHandlerInterface::class, RequestHandler::class); 
+$container->add(RequestHandlerInterface::class, RequestHandler::class)->addArgument($container); 
+
+// настройка routerDispatcher
+$container->add(RouterDispatch::class)->addArgument($container)->addArgument(RouterInterface::class);
 
 // настройка сессий
 $container->addShared(SessionInterface::class, Session::class);

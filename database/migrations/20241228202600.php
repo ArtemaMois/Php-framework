@@ -15,6 +15,7 @@ return new class
         ]);
         $table->addColumn('name', Types::STRING)->setLength(255);
         $table->addColumn('email', Types::TEXT)->setLength(255);
+        $table->addColumn('password', Types::TEXT)->setLength(300);
         $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, [
             'default' => 'CURRENT_TIMESTAMP',
         ]);

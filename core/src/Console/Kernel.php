@@ -4,6 +4,8 @@ namespace Timon\PhpFramework\Console;
 
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
+use Timon\PhpFramework\Http\Request\Request;
+use Timon\PhpFramework\Http\Response\Response;
 
 class Kernel
 {
@@ -40,4 +42,5 @@ class Kernel
     {
         return $this->container->get('framework-commands-namespace');
     }
+
 }
