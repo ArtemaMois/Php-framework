@@ -6,6 +6,7 @@ use Doctrine\DBAL\Connection;
 use Exception;
 use League\Container\Container;
 use Timon\PhpFramework\Http\Exceptions\HttpExceptionInterface;
+use Timon\PhpFramework\Http\Middleware\RequestHandlerInterface;
 use Timon\PhpFramework\Http\Request\Request;
 use Timon\PhpFramework\Http\Response\Response;
 use Timon\PhpFramework\Routing\Router\RouterInterface;
@@ -18,17 +19,18 @@ class Kernel
 
     public function __construct(
         private RouterInterface $router,
-        private Container $container
+        private Container $container,
+        private RequestHandlerInterface $requestHandler
     ) {
         $this->appEnv = $container->get('APP_ENV');
-        $this->request = Request::createFromGlobals();
     }
 
-    public function handle()
+    public function handle(Request $request)
     {
         try {
-            [$routeHandler, $params] = $this->router->dispatch($this->request, $this->container);
-            $response = call_user_func_array($routeHandler, $params);
+            $response = $this->requestHandler->handle($request);
+            // [$routeHandler, $params] = $this->router->dispatch($this->request, $this->container);
+            // $response = call_user_func_array($routeHandler, $params);
         } catch (Exception $e) {
             return $this->createExceptionResponse($e);
         }
@@ -36,7 +38,7 @@ class Kernel
         return $response;
     }
 
-    private function createExceptionResponse(\Exception $e)
+    private function createExceptionResponse(Exception $e)
     {
         if (in_array($this->appEnv, ['local', 'testing'])) {
             throw $e;

@@ -15,6 +15,8 @@ use Timon\PhpFramework\Console\Kernel as ConsoleKernel;
 use Timon\PhpFramework\Dbal\ConnectionFactory;
 use Timon\PhpFramework\Http\Controller\AbstractController;
 use Timon\PhpFramework\Http\Kernel\Kernel;
+use Timon\PhpFramework\Http\Middleware\RequestHandler;
+use Timon\PhpFramework\Http\Middleware\RequestHandlerInterface;
 use Timon\PhpFramework\Http\Request\Request;
 use Timon\PhpFramework\Routing\Router\Router;
 use Timon\PhpFramework\Routing\Router\RouterInterface;
@@ -61,10 +63,17 @@ $container->add(RouterInterface::class, Router::class);
 
 $container->extend(RouterInterface::class)->addMethodCall('register', [new ArrayArgument($routes)]);
 
-$container->add(Kernel::class)->addArgument(RouterInterface::class)->addArgument(Container::class);
+$container->add(Kernel::class)
+->addArguments([
+    RouterInterface::class,
+    Container::class,
+    RequestHandlerInterface::class
+]);
 
- 
-//загрузка сессий
+// настройка RequestHandler
+$container->add(RequestHandlerInterface::class, RequestHandler::class); 
+
+// настройка сессий
 $container->addShared(SessionInterface::class, Session::class);
 
 // настройка views
@@ -74,7 +83,7 @@ $container->addShared('twig', function () use ($container) {
     return $container->get('twig-factory')->create();
 });
 
-// Настройка контроллера
+// настройка контроллера
 $container->inflector(AbstractController::class)->invokeMethod('setContainer', [$container]);
 
 // настройка Request
