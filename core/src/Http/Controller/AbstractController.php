@@ -36,4 +36,12 @@ abstract class AbstractController
 
         return $response;
     }
+
+    protected function setValidationErrorsInSession(array $errors)
+    {
+        foreach($errors as $error)
+        {
+            $this->request->getSession()->setFlash('error', $error);
+        }
+    }
 }

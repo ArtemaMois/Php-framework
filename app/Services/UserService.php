@@ -4,8 +4,10 @@ namespace App\Services;
 
 use App\Entities\User;
 use Doctrine\DBAL\Connection;
+use Timon\PhpFramework\Authenticate\AuthUserInterface;
+use Timon\PhpFramework\Authenticate\AuthUserServiceInterface;
 
-class UserService
+class UserService implements AuthUserServiceInterface
 {
 
     public function __construct(
@@ -30,6 +32,24 @@ class UserService
         ])->executeQuery();
         $id = $this->connection->lastInsertId();
         $user->setId($id);
+        return $user;
+    }
+
+    public function findByEmail(string $email): ?AuthUserInterface  
+    {
+        $queryBuilder = $this->connection->createQueryBuilder();
+        $result = $queryBuilder->select('*')->from('users')->where('email=:email')->setParameter('email', $email)->executeQuery()->fetchAssociative();
+        if(!$result)
+        {
+            return null;
+        }
+        $user = User::create(
+            $result['email'],
+            $result['password'], 
+            $result['name'],
+            $result['id'],
+            new \DateTimeImmutable($result['created_at'])
+        );
         return $user;
     }
 }

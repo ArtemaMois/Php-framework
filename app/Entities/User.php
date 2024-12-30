@@ -2,7 +2,9 @@
 
 namespace App\Entities;
 
-class User
+use Timon\PhpFramework\Authenticate\AuthUserInterface;
+
+class User implements AuthUserInterface
 {
     public function __construct(
         private ?int $id = null,
@@ -22,12 +24,12 @@ class User
         return $this->name;
     }
 
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -41,4 +43,11 @@ class User
     {
         return $this->created_at;
     }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+
 }

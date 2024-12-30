@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\UserService;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Tools\DsnParser;
 use League\Container\Argument\Literal\ArrayArgument;
@@ -7,6 +8,9 @@ use League\Container\Argument\Literal\StringArgument;
 use League\Container\Container;
 use League\Container\ReflectionContainer;
 use Symfony\Component\Dotenv\Dotenv;
+use Timon\PhpFramework\Authenticate\AuthInterface;
+use Timon\PhpFramework\Authenticate\AuthUserServiceInterface;
+use Timon\PhpFramework\Authenticate\SessionAuth;
 use Timon\PhpFramework\Console\Application;
 use Timon\PhpFramework\Console\Command\MigrateCommand;
 use Timon\PhpFramework\Console\Command\RollbackCommand;
@@ -15,6 +19,7 @@ use Timon\PhpFramework\Console\Kernel as ConsoleKernel;
 use Timon\PhpFramework\Dbal\ConnectionFactory;
 use Timon\PhpFramework\Http\Controller\AbstractController;
 use Timon\PhpFramework\Http\Kernel\Kernel;
+use Timon\PhpFramework\Http\Middleware\Authenticate;
 use Timon\PhpFramework\Http\Middleware\RequestHandler;
 use Timon\PhpFramework\Http\Middleware\RequestHandlerInterface;
 use Timon\PhpFramework\Http\Middleware\RouterDispatch;
@@ -74,7 +79,7 @@ $container->add(RequestHandlerInterface::class, RequestHandler::class)->addArgum
 // настройка routerDispatcher
 $container->add(RouterDispatch::class)->addArgument($container)->addArgument(RouterInterface::class);
 
-// настройка сессий
+// настройка session
 $container->addShared(SessionInterface::class, Session::class);
 
 // настройка views
@@ -84,7 +89,14 @@ $container->addShared('twig', function () use ($container) {
     return $container->get('twig-factory')->create();
 });
 
-// настройка контроллера
+//настройка auth
+$container->add(AuthUserServiceInterface::class, UserService::class)->addArgument(Connection::class);
+$container->addShared(AuthInterface::class, SessionAuth::class)->addArguments([
+    AuthUserServiceInterface::class,
+    SessionInterface::class
+]);
+
+// настройка controller
 $container->inflector(AbstractController::class)->invokeMethod('setContainer', [$container]);
 
 // настройка Request
