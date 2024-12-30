@@ -7,11 +7,13 @@ use App\Services\PostService;
 use Timon\PhpFramework\Http\Controller\AbstractController;
 use Timon\PhpFramework\Http\Request\Request;
 use Timon\PhpFramework\Http\Response\RedirectResponse;
+use Timon\PhpFramework\Session\SessionInterface;
 
 class PostsController extends AbstractController
 {
     public function __construct(
-       private PostService $service
+       private PostService $service,
+       private SessionInterface $session
     ) {}
     public function index() {}
 
@@ -30,6 +32,7 @@ class PostsController extends AbstractController
     {
         $post = Post::create($this->request->postParam('title'), $this->request->postParam('body'));
         $post = $this->service->save($post);
+        $this->session->setFlash('success', 'Пост успешно создан');
         return new RedirectResponse("/posts/" . $post->id());
     }
 

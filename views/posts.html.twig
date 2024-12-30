@@ -1,8 +1,13 @@
 {% extends 'layouts/default.html.twig' %}
 
 {% block main %}
-    <div class="bg-body-tertiary p-5 rounded">
-        <h1>{{ post.title }}</h1>
-        <p>{{ post.body }}</p>
-    </div>
+	{% if session().hasFlash('success') %}
+		{% for message in session().getFlash('success') %}
+			<div class="alert alert-success">{{ message }}</div>
+		{% endfor  %}
+	{% endif %}
+	<div class="bg-body-tertiary p-5 rounded">
+		<h1>{{ post.title }}</h1>
+		<p>{{ post.body }}</p>
+	</div>
 {% endblock %}

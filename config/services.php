@@ -10,6 +10,7 @@ use Symfony\Component\Dotenv\Dotenv;
 use Timon\PhpFramework\Console\Application;
 use Timon\PhpFramework\Console\Command\MigrateCommand;
 use Timon\PhpFramework\Console\Command\RollbackCommand;
+use Timon\PhpFramework\Console\Command\TestStartCommand;
 use Timon\PhpFramework\Console\Kernel as ConsoleKernel;
 use Timon\PhpFramework\Dbal\ConnectionFactory;
 use Timon\PhpFramework\Http\Controller\AbstractController;
@@ -17,10 +18,13 @@ use Timon\PhpFramework\Http\Kernel\Kernel;
 use Timon\PhpFramework\Http\Request\Request;
 use Timon\PhpFramework\Routing\Router\Router;
 use Timon\PhpFramework\Routing\Router\RouterInterface;
+use Timon\PhpFramework\Session\Session;
+use Timon\PhpFramework\Session\SessionInterface;
+use Timon\PhpFramework\Template\TwigFactory;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-$routes = include APP_PATH.'/routes/web.php';
+$routes = include APP_PATH . '/routes/web.php';
 $container = new Container;
 
 $container->delegate(new ReflectionContainer(true));
@@ -28,7 +32,7 @@ $container->addShared(Container::class, $container);
 
 // настройка env
 $env = new Dotenv;
-$env->load(APP_PATH.'/.env');
+$env->load(APP_PATH . '/.env');
 $appEnv = $_ENV['APP_ENV'] ?? 'local';
 $container->add('APP_ENV', new StringArgument($appEnv));
 
@@ -46,10 +50,11 @@ $container->add(Application::class)->addArgument($container);
 $container->add(ConsoleKernel::class)->addArgument($container)->addArgument(Application::class);
 $container->add('console:migrate', MigrateCommand::class)
     ->addArgument($container->get(Connection::class))
-    ->addArgument(new StringArgument(APP_PATH.'/database/migrations/'));
-    $container->add('console:migrate-rollback', RollbackCommand::class)
+    ->addArgument(new StringArgument(APP_PATH . '/database/migrations/'));
+$container->add('console:migrate-rollback', RollbackCommand::class)
     ->addArgument($container->get(Connection::class))
-    ->addArgument(new StringArgument(APP_PATH.'/database/migrations/'));
+    ->addArgument(new StringArgument(APP_PATH . '/database/migrations/'));
+$container->add('console:test', TestStartCommand::class);
 
 // настройка router
 $container->add(RouterInterface::class, Router::class);
@@ -58,10 +63,18 @@ $container->extend(RouterInterface::class)->addMethodCall('register', [new Array
 
 $container->add(Kernel::class)->addArgument(RouterInterface::class)->addArgument(Container::class);
 
+ 
+//загрузка сессий
+$container->addShared(SessionInterface::class, Session::class);
+
 // настройка views
-$viewsPath = APP_PATH.'/views';
-$container->addShared('twig-loader', FilesystemLoader::class)->addArgument(new StringArgument($viewsPath));
-$container->addShared('twig', Environment::class)->addArgument('twig-loader');
+$viewsPath = APP_PATH . '/views';
+$container->add('twig-factory', TwigFactory::class)->addArguments([new StringArgument($viewsPath), SessionInterface::class]);
+$container->addShared('twig', function () use ($container) {
+    return $container->get('twig-factory')->create();
+});
+
+// Настройка контроллера
 $container->inflector(AbstractController::class)->invokeMethod('setContainer', [$container]);
 
 // настройка Request
